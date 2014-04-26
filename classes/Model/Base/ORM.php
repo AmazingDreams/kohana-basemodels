@@ -69,13 +69,19 @@ class Model_Base_ORM extends ORM {
 	 */
 	private function _build_filter($colname, array $properties)
 	{
-		$type        = Arr::get($properties, 'type');
+		$type        =        Arr::get($properties, 'type');
+		$is_nullable = (bool) Arr::get($properties, 'is_nullable');
 
 		$filters = array();
 
 		if($type === 'string')
 		{
 			$filters[] = array('trim');
+		}
+
+		if($is_nullable)
+		{
+			$filters[] = array(array($this, 'nullalize'));
 		}
 
 		return $filters;
@@ -119,4 +125,16 @@ class Model_Base_ORM extends ORM {
 
 		return $rules;
 	}
+
+	/**
+	 * Nullalize given value
+	 *
+	 * @param   value  The value to check
+	 * @return  value  Or NULL if the value == FALSE
+	 */
+	protected function nullalize($value)
+	{
+		return $value ? $value : NULL;
+	}
+
 } // End Model Base ORM
