@@ -1,4 +1,5 @@
 <?php defined('SYSPATH') or die('No direct script access');
+
 /**
  * Model Base User
  *
@@ -48,6 +49,26 @@ class Model_Base_User extends Model_Base_ORM {
 			'is_nullable' => TRUE,
 		),
 	);
+
+	/**
+	 * Check if a user has a given role
+	 *
+	 * @param   String   Role name
+	 * @return  boolean  User has role or not
+	 */
+	public function has_role($role = 'login')
+	{
+		static $roles = NULL;
+
+		if($roles === NULL)
+		{
+			$roles = $this->roles
+				->find_all()
+				->as_array('id', 'name');
+		}
+
+		return in_array($role, $roles);
+	}
 
 	/**
 	 * Extends its parents function by adding some extra rules
